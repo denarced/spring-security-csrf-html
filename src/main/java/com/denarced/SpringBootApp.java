@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
-public class SecHtmlLoginTryoutApplication extends WebMvcConfigurerAdapter {
+public class SpringBootApp extends WebMvcConfigurerAdapter {
 	public static void main(String[] args) {
-		SpringApplication.run(SecHtmlLoginTryoutApplication.class, args);
+		SpringApplication.run(SpringBootApp.class, args);
 	}
 }
