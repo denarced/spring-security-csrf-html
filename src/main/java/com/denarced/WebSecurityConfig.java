@@ -1,20 +1,13 @@
 package com.denarced;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.web.servlet.ViewResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -27,25 +20,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
             .formLogin()
-                .loginPage("/login.html")
+                .loginPage("/login")
                 .loginProcessingUrl("/login")
-                .permitAll()
-                .and()
-            .addFilterAfter(new HeaderFilter(), CsrfFilter.class);
-    }
-
-    private static class HeaderFilter extends OncePerRequestFilter {
-        @Override
-        protected void doFilterInternal(HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
-
-            CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-            response.addHeader(
-                csrfToken.getHeaderName(),
-                csrfToken.getToken());
-            filterChain.doFilter(request, response);
-        }
+                .permitAll();
     }
 
     @Autowired
@@ -55,5 +32,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .withUser("admin")
             .password("password")
             .roles("USER");
+    }
+
+    @Bean
+    public ViewResolver viewResolver() {
+        return new CustomViewResolver();
     }
 }
